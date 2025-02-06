@@ -10,7 +10,7 @@ import logger from "./utils/logger.js";
 config();
 
 /**
- * Validates environment variables and starts the Nostr MCP server
+ * Validates environment variables and starts the Bitcoin MCP server
  */
 export async function main() {
   // Get configuration from environment

@@ -263,11 +263,7 @@ export class BitcoinStdioServer implements BitcoinServer {
       content: [
         {
           type: "text",
-          text: `Decoded transaction:\nTXID: ${tx.txid}\nVersion: ${
-            tx.version
-          }\nInputs: ${tx.inputs.length}\nOutputs: ${
-            tx.outputs.length
-          }\nLocktime: ${tx.locktime}`,
+          text: `Decoded transaction:\nTXID: ${tx.txid}\nVersion: ${tx.version}\nInputs: ${tx.inputs.length}\nOutputs: ${tx.outputs.length}\nLocktime: ${tx.locktime}`,
         },
       ] as TextContent[],
     };
@@ -301,9 +297,9 @@ export class BitcoinStdioServer implements BitcoinServer {
           type: "text",
           text: `Transaction details:\nTXID: ${tx.txid}\nStatus: ${
             tx.status.confirmed ? "Confirmed" : "Unconfirmed"
-          }\nBlock Height: ${
-            tx.status.blockHeight || "Pending"
-          }\nFee: ${tx.fee} sats`,
+          }\nBlock Height: ${tx.status.blockHeight || "Pending"}\nFee: ${
+            tx.fee
+          } sats`,
         },
       ] as TextContent[],
     };
