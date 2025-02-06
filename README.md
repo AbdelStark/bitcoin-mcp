@@ -2,13 +2,13 @@
 
 ## Overview
 
-The Bitcoin MCP Server is a Model Context Protocol (MCP) server designed to bridge Bitcoin's blockchain with other applications. It offers Bitcoin utilities such as key generation, address validation, transaction decoding, and blockchain queries in a standardized service format.
+A Model Context Protocol (MCP) server that enables AI models to interact with Bitcoin, allowing them to generate keys, validate addresses, decode transactions, query the blockchain, and more.
 
 ## Features
 
 - **Key Generation**: Create new Bitcoin key pairs — including address, public key, and private key (WIF).
 - **Address Validation**: Validate the correctness of a Bitcoin address.
-- **Transaction Decoding**: Parse raw Bitcoin transaction hex to expose inputs, outputs, version, and locktime.
+- **Transaction Decoding**: Parse a raw Bitcoin transaction and display its details in a human-readable format.
 - **Blockchain Queries**:
   - **Latest Block**: Retrieve details about the most recent block (hash, height, timestamp, transaction count, etc.).
   - **Transaction Details**: Fetch detailed information about a transaction using its TXID.
@@ -37,7 +37,7 @@ bitcoin-mcp/
 1. **Clone the Repository**:
 
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/AbdelStark/bitcoin-mcp
    cd bitcoin-mcp
    ```
 
@@ -50,7 +50,7 @@ bitcoin-mcp/
 3. **Configure Environment Variables**:
 
    - Copy the example file:
-  
+
      ```bash
      cp .env.example .env
      ```
@@ -72,8 +72,9 @@ bitcoin-mcp/
    ```
 
 5. **Run the Server**:
+
    - **STDIO Mode** (default):
-  
+
      ```bash
      npm start
      ```
@@ -89,9 +90,142 @@ bitcoin-mcp/
 
      Then connect via HTTP to `http://localhost:3000/sse`.
 
-## Usage
+## Available Tools
 
-> TODO
+Each of the following tools is made available via the MCP interface. The input schemas below describe the expected parameters.
+
+### generate_key
+
+**Description:**  
+Generates a new Bitcoin key pair.
+
+**Input Schema:**
+
+```json
+{}
+```
+
+**Output:**  
+Returns an object containing:
+
+- `address`: Bitcoin address.
+- `privateKey`: Wallet Import Format (WIF) private key.
+- `publicKey`: Public key in hexadecimal format.
+
+---
+
+### validate_address
+
+**Description:**  
+Validates the correctness of a Bitcoin address.
+
+**Input Schema:**
+
+```json
+{
+  "address": "string"
+}
+```
+
+**Example Input:**
+
+```json
+{
+  "address": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"
+}
+```
+
+**Output:**  
+Returns a confirmation message informing whether the address is valid or invalid.
+
+---
+
+### decode_tx
+
+**Description:**  
+Decodes a raw Bitcoin transaction and displays its details.
+
+**Input Schema:**
+
+```json
+{
+  "rawHex": "string"
+}
+```
+
+**Example Input:**
+
+```json
+{
+  "rawHex": "0200000001abcd..."
+}
+```
+
+**Output:**  
+Returns transaction details including:
+
+- `txid`
+- `version`
+- Count of `inputs` and `outputs`
+- `locktime`
+
+---
+
+### get_latest_block
+
+**Description:**  
+Retrieves the latest Bitcoin block information.
+
+**Input Schema:**
+
+```json
+{}
+```
+
+**Output:**  
+Returns details including:
+
+- `hash` (block hash)
+- `height`
+- `timestamp`
+- `txCount` (number of transactions)
+- `size`
+- `weight`
+
+---
+
+### get_transaction
+
+**Description:**  
+Fetches detailed information about a specific transaction using its TXID.
+
+**Input Schema:**
+
+```json
+{
+  "txid": "string"
+}
+```
+
+**Example Input:**
+
+```json
+{
+  "txid": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+}
+```
+
+**Output:**  
+Returns transaction details including:
+
+- `txid`
+- `version`
+- `locktime`
+- `size`
+- `weight`
+- `fee`
+- `status` (confirmation status, block height, etc.)
+- Detailed `inputs` and `outputs` information
 
 ## Error Handling
 
