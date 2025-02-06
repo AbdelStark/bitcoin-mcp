@@ -8,7 +8,7 @@ import {
   McpError,
   TextContent,
 } from "@modelcontextprotocol/sdk/types.js";
-import { BitcoinClient } from "./bitcoin-client.js";
+import { BitcoinClient } from "./bitcoin_client.js";
 import {
   Config,
   ConfigSchema,
@@ -42,7 +42,7 @@ export class BitcoinStdioServer implements BitcoinServer {
     const customWrite = function (
       str: string | Uint8Array,
       encodingOrCb?: BufferEncoding | ((err?: Error) => void),
-      cb?: (err?: Error) => void,
+      cb?: (err?: Error) => void
     ): boolean {
       let encoding: BufferEncoding | undefined;
       let callback: ((err?: Error) => void) | undefined;
@@ -73,7 +73,7 @@ export class BitcoinStdioServer implements BitcoinServer {
         capabilities: {
           tools: {},
         },
-      },
+      }
     );
 
     this.setupHandlers();
@@ -110,7 +110,7 @@ export class BitcoinStdioServer implements BitcoinServer {
     try {
       // Restore original stdout
       process.stdout.write = this.originalStdout.write.bind(
-        this.originalStdout,
+        this.originalStdout
       );
       await this.server.close();
       logger.info("Server shutdown complete");
@@ -206,7 +206,7 @@ export class BitcoinStdioServer implements BitcoinServer {
           default:
             throw new McpError(
               ErrorCode.MethodNotFound,
-              `Unknown tool: ${name}`,
+              `Unknown tool: ${name}`
             );
         }
       } catch (error) {
@@ -232,7 +232,7 @@ export class BitcoinStdioServer implements BitcoinServer {
     if (!result.success) {
       throw new McpError(
         ErrorCode.InvalidParams,
-        `Invalid parameters: ${result.error.message}`,
+        `Invalid parameters: ${result.error.message}`
       );
     }
 
@@ -254,7 +254,7 @@ export class BitcoinStdioServer implements BitcoinServer {
     if (!result.success) {
       throw new McpError(
         ErrorCode.InvalidParams,
-        `Invalid parameters: ${result.error.message}`,
+        `Invalid parameters: ${result.error.message}`
       );
     }
 
@@ -286,7 +286,7 @@ export class BitcoinStdioServer implements BitcoinServer {
     if (!result.success) {
       throw new McpError(
         ErrorCode.InvalidParams,
-        `Invalid parameters: ${result.error.message}`,
+        `Invalid parameters: ${result.error.message}`
       );
     }
 

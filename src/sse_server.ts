@@ -8,7 +8,7 @@ import {
   McpError,
   TextContent,
 } from "@modelcontextprotocol/sdk/types.js";
-import { BitcoinClient } from "./bitcoin-client.js";
+import { BitcoinClient } from "./bitcoin_client.js";
 import {
   Config,
   ConfigSchema,
@@ -53,7 +53,7 @@ export class BitcoinSseServer implements BitcoinServer {
         capabilities: {
           tools: {},
         },
-      },
+      }
     );
     this.app = express();
 
@@ -212,7 +212,7 @@ export class BitcoinSseServer implements BitcoinServer {
           default:
             throw new McpError(
               ErrorCode.MethodNotFound,
-              `Unknown tool: ${name}`,
+              `Unknown tool: ${name}`
             );
         }
       } catch (error) {
@@ -245,7 +245,7 @@ export class BitcoinSseServer implements BitcoinServer {
     if (!result.success) {
       throw new McpError(
         ErrorCode.InvalidParams,
-        `Invalid parameters: ${result.error.message}`,
+        `Invalid parameters: ${result.error.message}`
       );
     }
 
@@ -271,7 +271,7 @@ export class BitcoinSseServer implements BitcoinServer {
     if (!result.success) {
       throw new McpError(
         ErrorCode.InvalidParams,
-        `Invalid parameters: ${result.error.message}`,
+        `Invalid parameters: ${result.error.message}`
       );
     }
 
@@ -310,7 +310,7 @@ export class BitcoinSseServer implements BitcoinServer {
     if (!result.success) {
       throw new McpError(
         ErrorCode.InvalidParams,
-        `Invalid parameters: ${result.error.message}`,
+        `Invalid parameters: ${result.error.message}`
       );
     }
 
