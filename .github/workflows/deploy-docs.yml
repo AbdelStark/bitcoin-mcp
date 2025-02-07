@@ -1,10 +1,13 @@
-# .github/workflows/deploy-docs.yml
 name: Deploy Docusaurus Site
 
 on:
   push:
     branches:
       - main
+
+# Add permissions block
+permissions:
+  contents: write # This allows the action to create and push to gh-pages
 
 jobs:
   deploy:
