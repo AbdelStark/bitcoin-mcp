@@ -1,3 +1,10 @@
+<div align="center">
+
+<a href="https://github.com/AbdelStark/bitcoin-mcp/actions/workflows/ci.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/AbdelStark/bitcoin-mcp/ci.yml?style=for-the-badge" height=30></a>
+<a href="https://bitcoin.org/"> <img alt="Bitcoin" src="https://img.shields.io/badge/Bitcoin-000?style=for-the-badge&logo=bitcoin&logoColor=white" height=30></a>
+<a href="https://modelcontextprotocol.com/"> <img alt="MCP" src="https://img.shields.io/badge/MCP-000?style=for-the-badge&logo=modelcontextprotocol&logoColor=white" height=30></a>
+</div>
+
 # Bitcoin MCP Server
 
 ## Overview
@@ -334,4 +341,4 @@ Contributions and feature requests are welcome! Feel free to submit pull request
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
