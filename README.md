@@ -16,19 +16,11 @@
     </a>
     <span> | </span>
     <a href="https://abdelstark.github.io/bitcoin-mcp/docs/integration/claude-desktop">
-      Use with Claude Desktop
+      Try with Claude
     </a>
     <span> | </span>
     <a href="https://abdelstark.github.io/bitcoin-mcp/docs/integration/goose">
-      Use with Goose
-    </a>
-    <span> | </span>
-    <a href="https://modelcontextprotocol.com/">
-      MCP Docs
-    </a>
-    <span> | </span>
-    <a href="https://bitcoin.org/bitcoin.pdf">
-      Bitcoin Whitepaper
+      Try with Goose
     </a>
   </h3>
 </div>
@@ -51,11 +43,11 @@ A Model Context Protocol (MCP) server that enables AI models to interact with Bi
   - [📂 Project Structure](#-project-structure)
   - [📦 Development Setup](#-development-setup)
   - [📦 Available Tools](#-available-tools)
-    - [generate_key](#generate_key)
-    - [validate_address](#validate_address)
-    - [decode_tx](#decode_tx)
-    - [get_latest_block](#get_latest_block)
-    - [get_transaction](#get_transaction)
+    - [generate\_key](#generate_key)
+    - [validate\_address](#validate_address)
+    - [decode\_tx](#decode_tx)
+    - [get\_latest\_block](#get_latest_block)
+    - [get\_transaction](#get_transaction)
   - [🚨 Error Handling](#-error-handling)
   - [🤝 Contributing](#-contributing)
   - [📝 License](#-license)
