@@ -31,9 +31,9 @@ A Model Context Protocol (MCP) server that enables AI models to interact with Bi
 
 ## 🎮 Demo
 
-| Claude Demo                                                                                                  | Goose Demo                                                                                 |
-| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
-| <img src="docs/static/img/bitcoin-mcp-claude-desktop-screenshot.png" alt="Claude Desktop Demo" width="400"/> | <img src="docs/static/img/bitcoin-mcp-goose-screenshot.png" alt="Goose Demo" width="400"/> |
+| Claude Demo [Video](https://github.com/user-attachments/assets/ce7a2665-c276-4a54-a727-b29dd911f8af)         | Goose Demo [Video](https://github.com/user-attachments/assets/7c1e4a05-51cf-435f-bd34-39e8fba6635e) |
+| ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| <img src="docs/static/img/bitcoin-mcp-claude-desktop-screenshot.png" alt="Claude Desktop Demo" width="400"/> | <img src="docs/static/img/bitcoin-mcp-goose-screenshot.png" alt="Goose Demo" width="400"/>          |
 
 ## 💼 Table of Contents
 
