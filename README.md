@@ -3,18 +3,24 @@
 <a href="https://github.com/AbdelStark/bitcoin-mcp/actions/workflows/ci.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/AbdelStark/bitcoin-mcp/ci.yml?style=for-the-badge" height=30></a>
 <a href="https://bitcoin.org/"> <img alt="Bitcoin" src="https://img.shields.io/badge/Bitcoin-000?style=for-the-badge&logo=bitcoin&logoColor=white" height=30></a>
 <a href="https://modelcontextprotocol.com/"> <img alt="MCP" src="https://img.shields.io/badge/MCP-000?style=for-the-badge&logo=modelcontextprotocol&logoColor=white" height=30></a>
+<img alt="NPM Version" src="https://img.shields.io/npm/v/bitcoin-mcp?style=for-the-badge">
+
 </div>
 
 # ₿itcoin MCP Server
 
 <div align="center">
   <h3>
-    <a href="https://github.com/AbdelStark/bitcoin-mcp/">
+    <a href="abdelstark.github.io/bitcoin-mcp/">
       Documentation
     </a>
     <span> | </span>
-    <a href="https://github.com/AbdelStark/bitcoin-mcp/#-available-tools">
-      Available Tools
+    <a href="https://abdelstark.github.io/bitcoin-mcp/docs/integration/claude-desktop">
+      Use with Claude Desktop
+    </a>
+    <span> | </span>
+    <a href="https://abdelstark.github.io/bitcoin-mcp/docs/integration/goose">
+      Use with Goose
     </a>
     <span> | </span>
     <a href="https://modelcontextprotocol.com/">
@@ -45,11 +51,11 @@ A Model Context Protocol (MCP) server that enables AI models to interact with Bi
   - [📂 Project Structure](#-project-structure)
   - [📦 Development Setup](#-development-setup)
   - [📦 Available Tools](#-available-tools)
-    - [generate\_key](#generate_key)
-    - [validate\_address](#validate_address)
-    - [decode\_tx](#decode_tx)
-    - [get\_latest\_block](#get_latest_block)
-    - [get\_transaction](#get_transaction)
+    - [generate_key](#generate_key)
+    - [validate_address](#validate_address)
+    - [decode_tx](#decode_tx)
+    - [get_latest_block](#get_latest_block)
+    - [get_transaction](#get_transaction)
   - [🚨 Error Handling](#-error-handling)
   - [🤝 Contributing](#-contributing)
   - [📝 License](#-license)
@@ -125,6 +131,7 @@ This method runs the Bitcoin MCP server locally as a subprocess of Goose, commun
      ```
 
      This tells Goose to launch the Bitcoin MCP server ([GitHub - AbdelStark/bitcoin-mcp: Bitcoin MCP Server](https://github.com/AbdelStark/bitcoin-mcp)). (Make sure to use the correct path to your server script or the correct command to run the server, just like in the Claude config.)
+
    - You typically do not need to add any arguments beyond the script path (unless your server requires special flags). The above command uses the default STDIO transport, which Goose expects for a command-line extension. (In the Goose config file, this would correspond to an entry with `cmd: "npx"` and `args: ["-y", "bitcoin-mcp@latest"]`, with `type: stdio` indicating standard I/O mode ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#adding-extensions#:~:text=extensions%3A%20fetch%3A%20name%3A%20GitHub%20cmd%3A,%7D%20type%3A%20stdio)).)
 
 4. **Finalize and enable:** Complete the extension addition. Goose will add this new extension to its configuration (usually `~/.config/goose/config.yaml`). Ensure the extension is **enabled** (if using the CLI wizard, it should be enabled by default once added; in the Goose Desktop app, you can check the Extensions list and toggle it on if it isn’t already ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#:~:text=%E2%97%87%20%20What%20would%20you,%E2%94%82%20%20%E2%97%BB%20fetch%20%E2%94%94)) ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#:~:text=%E2%94%82%20%20%E2%97%BE%20developer%20%E2%94%82,%E2%97%BB%20fetch%20%E2%94%94))).
