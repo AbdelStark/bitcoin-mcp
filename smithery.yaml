@@ -1,0 +1,33 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - bitcoinNetwork
+    properties:
+      logLevel:
+        type: string
+        default: info
+        description: The log level for the server (e.g., info, debug, error).
+      bitcoinNetwork:
+        type: string
+        default: mainnet
+        description: The Bitcoin network to interact with (e.g., mainnet, testnet).
+      blockstreamApiBase:
+        type: string
+        description: The base URL for the Blockstream API.
+      serverMode:
+        type: string
+        default: stdio
+        description: The server mode (e.g., stdio, sse).
+      port:
+        type: number
+        default: 3000
+        description: The port for the server to run on.
+  commandFunction:
+    # A function that produces the CLI command to start the MCP on stdio.
+    |-
+    (config) => ({command:'node', args:['build/cli.js'], env: {LOG_LEVEL: config.logLevel || 'info', BITCOIN_NETWORK: config.bitcoinNetwork || 'mainnet', BLOCKSTREAM_API_BASE: config.blockstreamApiBase, SERVER_MODE: config.serverMode || 'stdio', PORT: config.port ? config.port.toString() : '3000'}})
