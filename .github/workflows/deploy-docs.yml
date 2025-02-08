@@ -1,0 +1,35 @@
+name: Deploy Docusaurus Site
+
+on:
+  push:
+    branches:
+      - main
+
+# Add permissions block
+permissions:
+  contents: write # This allows the action to create and push to gh-pages
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 23
+
+      - name: Install Dependencies and Build Docs
+        working-directory: docs
+        run: |
+          npm ci
+          npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/build

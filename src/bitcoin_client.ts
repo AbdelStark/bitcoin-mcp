@@ -12,58 +12,12 @@ import {
 } from "./bitcoin_mcp_types.js";
 import logger from "./utils/logger.js";
 import { BitcoinError, BitcoinErrorCode } from "./bitcoin_mcp_types.js";
+import { randomBytes } from "crypto";
 
 import * as tinysecp from "tiny-secp256k1";
 
-// API response types
-interface BlockstreamBlock {
-  id: string;
-  height: number;
-  timestamp: number;
-  tx_count: number;
-  size: number;
-  weight: number;
-}
-
-interface BlockstreamTxStatus {
-  confirmed: boolean;
-  block_height?: number;
-  block_hash?: string;
-  block_time?: number;
-}
-
-interface BlockstreamTxPrevout {
-  value: number;
-  scriptpubkey: string;
-  scriptpubkey_address?: string;
-}
-
-interface BlockstreamTxVin {
-  txid: string;
-  vout: number;
-  sequence: number;
-  prevout?: BlockstreamTxPrevout;
-}
-
-interface BlockstreamTxVout {
-  value: number;
-  scriptpubkey: string;
-  scriptpubkey_address?: string;
-}
-
-interface BlockstreamTx {
-  txid: string;
-  version: number;
-  locktime: number;
-  size: number;
-  weight: number;
-  fee: number;
-  status: BlockstreamTxStatus;
-  vin: BlockstreamTxVin[];
-  vout: BlockstreamTxVout[];
-}
-
 const ECPair: ECPairAPI = ECPairFactory(tinysecp);
+const rng = (size: number) => randomBytes(size);
 
 export class BitcoinClient {
   private network: bitcoin.networks.Network;
@@ -79,9 +33,9 @@ export class BitcoinClient {
 
   async generateKey(): Promise<GeneratedKey> {
     try {
-      const keyPair = ECPair.makeRandom({ network: this.network });
+      const keyPair = ECPair.makeRandom({ rng });
       const { address } = bitcoin.payments.p2pkh({
-        pubkey: Buffer.from(keyPair.publicKey),
+        pubkey: keyPair.publicKey,
         network: this.network,
       });
 

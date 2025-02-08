@@ -1,6 +1,6 @@
 {
   "name": "bitcoin-mcp",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A Model Context Protocol server for interacting with Bitcoin.",
   "type": "module",
   "main": "./build/index.js",
@@ -49,7 +49,7 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "0.6.0",
-    "bitcoinjs-lib": "6.0.1",
+    "bitcoinjs-lib": "6.1.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ecpair": "^2.1.0",
