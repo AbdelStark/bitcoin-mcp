@@ -3,8 +3,6 @@
 <a href="https://github.com/AbdelStark/bitcoin-mcp/actions/workflows/ci.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/AbdelStark/bitcoin-mcp/ci.yml?style=for-the-badge" height=30></a>
 <a href="https://bitcoin.org/"> <img alt="Bitcoin" src="https://img.shields.io/badge/Bitcoin-000?style=for-the-badge&logo=bitcoin&logoColor=white" height=30></a>
 <a href="https://modelcontextprotocol.com/"> <img alt="MCP" src="https://img.shields.io/badge/MCP-000?style=for-the-badge&logo=modelcontextprotocol&logoColor=white" height=30></a>
-<a href="https://smithery.ai/server/@AbdelStark/bitcoin-mcp"><img alt="Smithery Badge" src="https://smithery.ai/badge/@AbdelStark/bitcoin-mcp"></a>
-<a href="https://www.npmjs.com/package/bitcoin-mcp"><img alt="NPM Version" src="https://img.shields.io/npm/v/bitcoin-mcp?style=for-the-badge" height=30></a>
 
 </div>
 
@@ -24,6 +22,11 @@
       Try with Goose
     </a>
   </h3>
+</div>
+
+<div align="center">
+<a href="https://smithery.ai/server/@AbdelStark/bitcoin-mcp"><img alt="Smithery Badge" src="https://smithery.ai/badge/@AbdelStark/bitcoin-mcp"></a>
+<a href="https://www.npmjs.com/package/bitcoin-mcp"><img alt="NPM Version" src="https://img.shields.io/npm/v/bitcoin-mcp"></a>
 </div>
 
 ## Overview
