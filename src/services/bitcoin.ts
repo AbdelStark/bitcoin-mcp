@@ -80,7 +80,7 @@ export class BitcoinService {
       logger.error({ error }, "Failed to generate key");
       throw new BitcoinError(
         "Failed to generate key pair",
-        BitcoinErrorCode.KEY_GENERATION_ERROR,
+        BitcoinErrorCode.KEY_GENERATION_ERROR
       );
     }
   }
@@ -140,7 +140,7 @@ export class BitcoinService {
       logger.error({ error, rawHex }, "Failed to decode transaction");
       throw new BitcoinError(
         "Failed to decode transaction",
-        BitcoinErrorCode.DECODE_ERROR,
+        BitcoinErrorCode.DECODE_ERROR
       );
     }
   }
@@ -155,11 +155,18 @@ export class BitcoinService {
    */
   async getLatestBlock(): Promise<BlockInfo> {
     try {
-      const response = await fetch(`${this.apiBase}/blocks/tip`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const hashRes = await fetch(`${this.apiBase}/blocks/tip/hash`);
+      if (!hashRes.ok) {
+        throw new Error("Failed to fetch latest block hash");
       }
-      const block = (await response.json()) as any;
+      const hash = await hashRes.text();
+
+      const blockRes = await fetch(`${this.apiBase}/block/${hash}`);
+      if (!blockRes.ok) {
+        throw new Error("Failed to fetch block data");
+      }
+      const block = (await blockRes.json()) as BlockstreamBlock;
+
       return {
         hash: block.id,
         height: block.height,
@@ -169,10 +176,10 @@ export class BitcoinService {
         weight: block.weight,
       };
     } catch (error) {
-      logger.error({ error }, "Failed to get latest block");
+      logger.error({ error }, "Failed to fetch latest block");
       throw new BitcoinError(
-        "Failed to get latest block",
-        BitcoinErrorCode.BLOCKCHAIN_ERROR,
+        "Failed to fetch latest block",
+        BitcoinErrorCode.BLOCKCHAIN_ERROR
       );
     }
   }
@@ -227,7 +234,7 @@ export class BitcoinService {
       logger.error({ error, txid }, "Failed to get transaction");
       throw new BitcoinError(
         "Failed to get transaction",
-        BitcoinErrorCode.BLOCKCHAIN_ERROR,
+        BitcoinErrorCode.BLOCKCHAIN_ERROR
       );
     }
   }
