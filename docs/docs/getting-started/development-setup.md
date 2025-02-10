@@ -72,21 +72,27 @@ src/
 ```
 
 #### Base Server (`server/base.ts`)
+
 The foundation of our server architecture, providing:
+
 - Tool registration and handling
 - Error management
 - Common lifecycle methods
 - Type-safe request/response handling
 
 #### SSE Server (`server/sse.ts`)
+
 Implements Server-Sent Events transport:
+
 - Real-time updates
 - Persistent connections
 - Express.js endpoints
 - Automatic reconnection
 
 #### STDIO Server (`server/stdio.ts`)
+
 Implements Standard I/O transport:
+
 - Command-line interface
 - Stream redirection
 - Process isolation
@@ -95,7 +101,9 @@ Implements Standard I/O transport:
 ### Core Services
 
 #### Bitcoin Service (`services/bitcoin.ts`)
+
 Handles all Bitcoin-related operations:
+
 - Key generation
 - Address validation
 - Transaction decoding
@@ -106,11 +114,13 @@ Handles all Bitcoin-related operations:
 ### Running Different Server Modes
 
 1. **STDIO Mode (Default)**
+
 ```bash
 npm start
 ```
 
 2. **SSE Mode**
+
 ```bash
 SERVER_MODE=sse npm start
 ```
@@ -150,6 +160,7 @@ npm run lint:fix
 ### Adding New Features
 
 1. **New Tool Implementation**
+
    - Add tool handler in `server/tools.ts`
    - Register tool in `server/base.ts`
    - Implement business logic in `services/bitcoin.ts`
