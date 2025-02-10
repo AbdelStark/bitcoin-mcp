@@ -1,3 +1,5 @@
+# ₿itcoin MCP Server
+
 <div align="center">
 
 <a href="https://github.com/AbdelStark/bitcoin-mcp/actions/workflows/ci.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/AbdelStark/bitcoin-mcp/ci.yml?style=for-the-badge" height=30></a>
@@ -5,8 +7,6 @@
 <a href="https://modelcontextprotocol.com/"> <img alt="MCP" src="https://img.shields.io/badge/MCP-000?style=for-the-badge&logo=modelcontextprotocol&logoColor=white" height=30></a>
 
 </div>
-
-# ₿itcoin MCP Server
 
 <div align="center">
   <h3>
@@ -33,153 +33,107 @@
 
 A Model Context Protocol (MCP) server that enables AI models to interact with Bitcoin, allowing them to generate keys, validate addresses, decode transactions, query the blockchain, and more.
 
-## 🎮 Demo
+## 🎯 Architecture
 
-| Claude Demo [Video](https://github.com/user-attachments/assets/ce7a2665-c276-4a54-a727-b29dd911f8af)         | Goose Demo [Video](https://github.com/user-attachments/assets/7c1e4a05-51cf-435f-bd34-39e8fba6635e) |
-| ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| <img src="docs/static/img/bitcoin-mcp-claude-desktop-screenshot.png" alt="Claude Desktop Demo" width="400"/> | <img src="docs/static/img/bitcoin-mcp-goose-screenshot.png" alt="Goose Demo" width="400"/>          |
+Bitcoin MCP Server uses a modular architecture based on the Model Context Protocol (MCP). The server is designed to support multiple transport mechanisms through a common base implementation.
 
-## 💼 Table of Contents
+```
+┌─────────────────────────┐
+│     BaseBitcoinServer   │
+├─────────────────────────┤
+│ ✓ Tool Registration     │
+│ ✓ Error Handling        │
+│ ✓ Lifecycle Management  │
+└───────────┬─────────────┘
+            │
+    ┌───────┴───────┐
+    │               │
+┌───────────┐ ┌──────────┐
+│   SSE     │ │  STDIO   │
+└───────────┘ └──────────┘
+```
 
-- [₿itcoin MCP Server](#itcoin-mcp-server)
-  - [Overview](#overview)
-  - [🎮 Demo](#-demo)
-  - [💼 Table of Contents](#-table-of-contents)
-  - [🔧 Features](#-features)
-  - [🔑 Claude Desktop Integration](#-claude-desktop-integration)
-    - [Testing the Claude Desktop Integration](#testing-the-claude-desktop-integration)
-  - [🦆 Goose Integration](#-goose-integration)
-    - [Using STDIO (Local Extension)](#using-stdio-local-extension)
-      - [Using SSE (Remote Extension)](#using-sse-remote-extension)
-  - [📦 Development Setup](#-development-setup)
-  - [📦 Available Tools](#-available-tools)
-  - [🚨 Error Handling](#-error-handling)
-  - [🤝 Contributing](#-contributing)
-  - [📝 License](#-license)
+### Core Components
+
+- **Base Server**: Common functionality for all server types
+- **SSE Server**: Real-time updates via Server-Sent Events
+- **STDIO Server**: Command-line interface via Standard I/O
+- **Bitcoin Service**: Core Bitcoin operations and blockchain queries
 
 ## 🔧 Features
 
-- **Key Generation**: Create new Bitcoin key pairs — including address, public key, and private key (WIF).
-- **Address Validation**: Validate the correctness of a Bitcoin address.
-- **Transaction Decoding**: Parse a raw Bitcoin transaction and display its details in a human-readable format.
-- **Blockchain Queries**:
-  - **Latest Block**: Retrieve details about the most recent block (hash, height, timestamp, transaction count, etc.).
-  - **Transaction Details**: Fetch detailed information about a transaction using its TXID.
+- **🔑 Key Generation**: Create new Bitcoin key pairs — including address, public key, and private key (WIF)
+- **🔍 Address Validation**: Validate the correctness of a Bitcoin address
+- **📜 Transaction Decoding**: Parse raw Bitcoin transactions into human-readable format
+- **⛓️ Blockchain Queries**:
+  - Latest block information (hash, height, timestamp, etc.)
+  - Detailed transaction data (inputs, outputs, fees, etc.)
 
-## 🔑 Claude Desktop Integration
+## 🚀 Quick Start
 
-To use the Bitcoin MCP server with Claude Desktop (Anthropic's desktop app for Claude), follow these steps:
+1. **Install the package**:
+```bash
+npm install bitcoin-mcp
+```
 
-1. **Download and Install Claude Desktop:** Visit the official Claude Desktop downloads page and get the app for your operating system (macOS or Windows) ([Installing Claude for Desktop | Anthropic Help Center](https://support.anthropic.com/en/articles/10065433-installing-claude-for-desktop#:~:text=1,page)). Install the app and ensure you're using the latest version (you can check for updates in the app menu).
+2. **Choose your server mode**:
 
-2. **Configure Claude Desktop to use the Bitcoin MCP Server:** Open the Claude Desktop configuration file (it's created when you first edit settings in Claude Desktop):
-
-   - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-   - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`  
-     Add an entry for the Bitcoin MCP server in this JSON config under the `"mcpServers"` section. For example:
-
-   ```json
-   {
-     "mcpServers": {
-       "bitcoin-mcp": {
-         "command": "npx",
-         "args": ["-y", "bitcoin-mcp@latest"]
-       }
-     }
-   }
-   ```
-
-   In the snippet above, `"bitcoin-mcp"` is an identifier for the server (you can name it whatever you want). The `command` is set to run the `npx` command, and `args` points to the path of your Bitcoin MCP server script or the command to run the server.
-
-3. **Restart Claude Desktop:** Save the `claude_desktop_config.json` file and then **close and reopen Claude Desktop**. On the next launch, Claude will automatically start the Bitcoin MCP server as configured. If Claude Desktop was running, you need to restart it for the changes to take effect.
-
-### Testing the Claude Desktop Integration
-
-Once Claude Desktop is restarted, you can test whether the Bitcoin MCP server is working correctly:
-
-- **Ask Claude a sample question related to Bitcoin.** For example, try asking: _"What's the latest block on the Bitcoin network?"_ If the integration is successful, Claude's response should include the latest block fetched via the MCP server, rather than an "I don't know" or a generic answer. You can also try other queries like _"Give me information about the transaction with TXID abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890."_ Claude should use the MCP server's tools to retrieve the data and answer your query.
-
-- **Verify the response:** Claude should return a detailed answer (e.g. the latest block on the Bitcoin network) without errors. If you get an error message or no useful response, the MCP server might not be connected properly.
-
-- **Check Claude's logs (if needed):** Claude Desktop provides log files that can help debug MCP integrations. If the tool isn't responding, check the log files in:
-  - **macOS:** `~/Library/Logs/Claude/`
-  - **Windows:** `%APPDATA%\Claude\logs\`  
-    Look for `mcp.log` for general MCP connection messages, and a file named `mcp-server-bitcoin-mcp.log` (or with whatever name you used) for the MCP server's output/errors. These logs will show if the server started up or if there were any errors (such as a wrong path or exceptions in the server). If you see errors, fix the configuration or environment as needed, then restart Claude Desktop and test again.
-
-## 🦆 Goose Integration
-
-Goose is an open-source AI agent framework by Block that supports extensions via the Model Context Protocol. You can integrate the Bitcoin MCP server as a Goose extension to allow Goose to interact with the Bitcoin blockchain. Goose supports two modes of integration for MCP servers: running the server as a local process (STDIO) or connecting to it as a remote service via Server-Sent Events (SSE). Below are instructions for both methods:
-
-### Using STDIO (Local Extension)
-
-This method runs the Bitcoin MCP server locally as a subprocess of Goose, communicating through standard input/output.
-
-1. **Add a new extension in Goose:** Open Goose's configuration interface. You can do this via the command line by running `goose configure`, or in the Goose Desktop app by going to **Settings > Extensions**. From the menu, choose **"Add Extension."** ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#adding-extensions#:~:text=1))
-
-2. **Choose the extension type – Command-Line Extension:** When prompted for the type of extension, select **Command-Line Extension** (in the CLI menu or UI) so that Goose knows it should launch a local command ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#adding-extensions#:~:text=3,extension%20you%E2%80%99d%20like%20to%20add)) (as opposed to a built-in or remote extension).
-
-3. **Enter the extension details:** Provide a name and command for the Bitcoin MCP server:
-
-   - **Name:** You can call it "bitcoin", or any identifier (this will be how you refer to the extension).
-   - **Command:** Specify how to run the MCP server. For example, if you have the Python script, enter the command to run it. In the CLI configurator, it might ask "What command should be run?" – you would enter:
-
-     ```bash
-     npx -y bitcoin-mcp@latest
-     ```
-
-     This tells Goose to launch the Bitcoin MCP server ([GitHub - AbdelStark/bitcoin-mcp: Bitcoin MCP Server](https://github.com/AbdelStark/bitcoin-mcp)). (Make sure to use the correct path to your server script or the correct command to run the server, just like in the Claude config.)
-
-   - You typically do not need to add any arguments beyond the script path (unless your server requires special flags). The above command uses the default STDIO transport, which Goose expects for a command-line extension. (In the Goose config file, this would correspond to an entry with `cmd: "npx"` and `args: ["-y", "bitcoin-mcp@latest"]`, with `type: stdio` indicating standard I/O mode ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#adding-extensions#:~:text=extensions%3A%20fetch%3A%20name%3A%20GitHub%20cmd%3A,%7D%20type%3A%20stdio)).)
-
-4. **Finalize and enable:** Complete the extension addition. Goose will add this new extension to its configuration (usually `~/.config/goose/config.yaml`). Ensure the extension is **enabled** (if using the CLI wizard, it should be enabled by default once added; in the Goose Desktop app, you can check the Extensions list and toggle it on if it isn't already ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#:~:text=%E2%97%87%20%20What%20would%20you,%E2%94%82%20%20%E2%97%BB%20fetch%20%E2%94%94)) ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#:~:text=%E2%94%82%20%20%E2%97%BE%20developer%20%E2%94%82,%E2%97%BB%20fetch%20%E2%94%94))).
-
-5. **Start a Goose session with the new extension:** You can now use the extension in Goose. If you're running Goose via CLI, start a session that includes the extension by running:
-
+   **STDIO Mode** (Default):
    ```bash
-   goose session --with-extension "bitcoin"
+   npm start
    ```
 
-replacing "bitcoin" with whatever name you gave the extension ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#:~:text=Starting%20a%20Session%20with%20Extensions)). (This ensures the session loads the extension. Alternatively, if the extension is enabled globally, Goose Desktop or CLI will automatically have it available in all sessions.)
+   **SSE Mode**:
+   ```bash
+   SERVER_MODE=sse npm start
+   ```
 
-#### Using SSE (Remote Extension)
+## 🔌 Integration Options
 
-This method connects Goose to an already-running MCP server via an HTTP SSE stream. Use this if you want to run the Bitcoin MCP server as a standalone service (possibly on another machine or just independently of Goose).
+### Claude Desktop
 
-1. **Launch the MCP server as a standalone service:** Run the Bitcoin MCP server so that it listens for connections. In practice, this means the server needs to be started in a mode that serves an HTTP endpoint for MCP. For example, you might run the server with a specific command or option to listen on a port (such as using an MCP library's built-in web server capabilities or running under a web framework). Ensure the server is reachable at a known URL (e.g., `http://localhost:9000`) and supports the MCP protocol over SSE.
+1. Install Claude Desktop
+2. Configure MCP server in settings:
+```json
+{
+  "mcpServers": {
+    "bitcoin": {
+      "url": "http://localhost:3000"
+    }
+  }
+}
+```
 
-2. **Add a new extension in Goose (Remote):** As before, run `goose configure` or use the Goose UI to **Add Extension** ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#adding-extensions#:~:text=1)). This time, choose **Remote Extension** when asked for the type of extension ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#adding-extensions#:~:text=3,extension%20you%E2%80%99d%20like%20to%20add)). This tells Goose that it will connect to an external server via SSE.
+### Goose
 
-3. **Enter the remote extension details:** Give the extension a name (e.g., "bitcoin") and provide the server's URL. For the **URL**, enter the base address where the MCP server is running. For instance, if your server is listening on port 9000 on your local machine, you might enter `http://localhost:9000`. Goose will attempt to connect to the MCP server's SSE endpoint at that address. (Goose uses the standard MCP SSE path, which by convention is under the `/mcp/sse` route on the server, you usually just need to supply the host and port, and Goose handles the rest.)
+1. **Local Extension (STDIO)**:
+```bash
+npm start
+```
 
-4. **Enable the extension:** After adding the remote extension, ensure it's enabled in Goose's settings (just like in the STDIO case). Only one of the STDIO or SSE extension (with the same tools) needs to be enabled – if you accidentally enable both a local and remote version of the same server, you may want to disable one to avoid confusion.
-
-**Using the Bitcoin MCP extension in Goose:** Once the extension is set up (via either method above) and enabled, you can interact with Goose and query Bitcoin data through it. In a new Goose chat or session, simply ask questions as you normally would. Goose will recognize when to use the Bitcoin MCP tools to fulfill your request. For example:
-
-- _"What's the latest Bitcoin block?"_
-- _"Give me information about the transaction with TXID abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890."_
-
-When you ask these questions, Goose will invoke the MCP server's tools and return the answer (e.g., the latest Bitcoin block information). You should see Goose responding with up-to-date information pulled from the Bitcoin blockchain via the MCP server.
-
-If Goose does not seem to use the extension (for instance, if it responds that it cannot find the information), make sure the extension is enabled and that the server is running (in SSE mode for remote). You can also run Goose's CLI with verbose logging to see if it attempted to call the extension. Generally, if configured correctly, Goose will automatically discover the MCP server's capabilities and use them when relevant.
-
-**Further Resources:** For more details on Goose extensions and the MCP, refer to the official Goose documentation ([Using Extensions | goose](https://block.github.io/goose/docs/getting-started/using-extensions/#adding-extensions#:~:text=MCP%20Server%20Directory)). The docs include a list of built-in and community extensions and explain how MCP servers integrate into Goose. You can also find a directory of available MCP servers and additional configuration tips in the Goose docs and the Model Context Protocol documentation. This can help if you want to explore more extensions or develop your own.
-
-## 📦 Development Setup
-
-Find the setup instructions in the [Development Setup](https://abdelstark.github.io/bitcoin-mcp/docs/getting-started/development-setup) guide.
+2. **Remote Extension (SSE)**:
+```bash
+SERVER_MODE=sse npm start
+```
 
 ## 📦 Available Tools
 
-Find the available tools in the [API Reference](https://abdelstark.github.io/bitcoin-mcp/docs/api/generate-key) guide.
+| Tool               | Description                     |
+| ------------------ | ------------------------------- |
+| `generate_key`     | Generate a new Bitcoin key pair |
+| `validate_address` | Validate a Bitcoin address      |
+| `decode_tx`        | Decode a raw transaction        |
+| `get_latest_block` | Get latest block information    |
+| `get_transaction`  | Get transaction details         |
 
-## 🚨 Error Handling
+## 🛠️ Development
 
-The server employs custom error types to handle Bitcoin operations and blockchain queries. Detailed error messages are logged using Pino and included in client responses for easier debugging.
+See our [Development Setup Guide](https://abdelstark.github.io/bitcoin-mcp/docs/getting-started/development-setup) for detailed instructions.
 
 ## 🤝 Contributing
 
-Contributions and feature requests are welcome! Feel free to submit pull requests or open issues on GitHub.
+We welcome contributions! Please see our [Contributing Guide](https://abdelstark.github.io/bitcoin-mcp/docs/contributing) for details.
 
 ## 📝 License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

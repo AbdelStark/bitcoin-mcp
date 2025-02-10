@@ -1,28 +1,46 @@
-// Bitcoin client implementation
+/**
+ * 🏦 Bitcoin Service: The main service for interacting with the Bitcoin network and serving utility features.
+ * =====================================================
+ *
+ * This service provides a clean interface to interact with Bitcoin's network. It handles everything from key generation
+ * to transaction decoding, making Bitcoin operations accessible and safe.
+ *
+ * Features:
+ * 🔑 Key Generation
+ * 🔍 Address Validation
+ * 📜 Transaction Decoding
+ * ⛓️ Blockchain Queries
+ *
+ */
 
 import * as bitcoin from "bitcoinjs-lib";
 import { ECPairFactory, ECPairAPI } from "ecpair";
 import fetch from "node-fetch";
+import { randomBytes } from "crypto";
+import * as tinysecp from "tiny-secp256k1";
 import {
   Config,
   GeneratedKey,
   DecodedTx,
   BlockInfo,
   TransactionInfo,
-} from "./bitcoin_mcp_types.js";
-import logger from "./utils/logger.js";
-import { BitcoinError, BitcoinErrorCode } from "./bitcoin_mcp_types.js";
-import { randomBytes } from "crypto";
-
-import * as tinysecp from "tiny-secp256k1";
+  BitcoinError,
+  BitcoinErrorCode,
+} from "../types.js";
+import logger from "../utils/logger.js";
 
 const ECPair: ECPairAPI = ECPairFactory(tinysecp);
 const rng = (size: number) => randomBytes(size);
 
-export class BitcoinClient {
+export class BitcoinService {
   private network: bitcoin.networks.Network;
   private apiBase: string;
 
+  /**
+   * Creates a new Bitcoin service instance
+   *
+   * @param config - Configuration including network (mainnet/testnet) and API base URL
+   */
   constructor(config: Config) {
     this.network =
       config.network === "testnet"
@@ -31,6 +49,16 @@ export class BitcoinClient {
     this.apiBase = config.blockstreamApiBase;
   }
 
+  /**
+   * 🔑 Generate a New Bitcoin Key Pair
+   * ================================
+   * Creates a fresh Bitcoin key pair with:
+   * - Private key (WIF format)
+   * - Public key (hex)
+   * - Bitcoin address (P2PKH)
+   *
+   * Security Note: Uses cryptographically secure random number generation
+   */
   async generateKey(): Promise<GeneratedKey> {
     try {
       const keyPair = ECPair.makeRandom({ rng });
@@ -57,6 +85,15 @@ export class BitcoinClient {
     }
   }
 
+  /**
+   * 🔍 Validate Bitcoin Address
+   * =========================
+   * Checks if a given string is a valid Bitcoin address
+   * for the current network (mainnet/testnet)
+   *
+   * @param address - The Bitcoin address to validate
+   * @returns true if valid, false otherwise
+   */
   validateAddress(address: string): boolean {
     try {
       bitcoin.address.toOutputScript(address, this.network);
@@ -66,6 +103,20 @@ export class BitcoinClient {
     }
   }
 
+  /**
+   * 📜 Decode Raw Transaction
+   * =======================
+   * Parses a raw transaction hex and returns human-readable information
+   *
+   * Returns:
+   * - Transaction ID
+   * - Version
+   * - Inputs (previous outputs being spent)
+   * - Outputs (new outputs being created)
+   * - Locktime
+   *
+   * @param rawHex - Raw transaction hex string
+   */
   decodeTx(rawHex: string): DecodedTx {
     try {
       const tx = bitcoin.Transaction.fromHex(rawHex);
@@ -94,28 +145,21 @@ export class BitcoinClient {
     }
   }
 
-  private tryGetAddress(script: Buffer): string | undefined {
-    try {
-      return bitcoin.address.fromOutputScript(script, this.network);
-    } catch {
-      return undefined;
-    }
-  }
-
+  /**
+   * ⛓️ Get Latest Block Information
+   * ============================
+   * Fetches information about the most recent block
+   * from the Bitcoin network
+   *
+   * @returns Promise with block details
+   */
   async getLatestBlock(): Promise<BlockInfo> {
     try {
-      const hashRes = await fetch(`${this.apiBase}/blocks/tip/hash`);
-      if (!hashRes.ok) {
-        throw new Error("Failed to fetch latest block hash");
+      const response = await fetch(`${this.apiBase}/blocks/tip`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const hash = await hashRes.text();
-
-      const blockRes = await fetch(`${this.apiBase}/block/${hash}`);
-      if (!blockRes.ok) {
-        throw new Error("Failed to fetch block data");
-      }
-      const block = (await blockRes.json()) as BlockstreamBlock;
-
+      const block = (await response.json()) as any;
       return {
         hash: block.id,
         height: block.height,
@@ -125,22 +169,29 @@ export class BitcoinClient {
         weight: block.weight,
       };
     } catch (error) {
-      logger.error({ error }, "Failed to fetch latest block");
+      logger.error({ error }, "Failed to get latest block");
       throw new BitcoinError(
-        "Failed to fetch latest block",
+        "Failed to get latest block",
         BitcoinErrorCode.BLOCKCHAIN_ERROR,
       );
     }
   }
 
+  /**
+   * 🔍 Get Transaction Details
+   * =======================
+   * Fetches detailed information about a specific transaction
+   *
+   * @param txid - Transaction ID to look up
+   * @returns Promise with transaction details
+   */
   async getTransaction(txid: string): Promise<TransactionInfo> {
     try {
-      const res = await fetch(`${this.apiBase}/tx/${txid}`);
-      if (!res.ok) {
-        throw new Error("Transaction not found");
+      const response = await fetch(`${this.apiBase}/tx/${txid}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const tx = (await res.json()) as BlockstreamTx;
-
+      const tx = (await response.json()) as any;
       return {
         txid: tx.txid,
         version: tx.version,
@@ -154,7 +205,7 @@ export class BitcoinClient {
           blockHash: tx.status.block_hash,
           blockTime: tx.status.block_time,
         },
-        inputs: tx.vin.map((input) => ({
+        inputs: tx.vin.map((input: any) => ({
           txid: input.txid,
           vout: input.vout,
           sequence: input.sequence,
@@ -166,18 +217,29 @@ export class BitcoinClient {
               }
             : undefined,
         })),
-        outputs: tx.vout.map((output) => ({
+        outputs: tx.vout.map((output: any) => ({
           value: output.value,
           scriptPubKey: output.scriptpubkey,
           address: output.scriptpubkey_address,
         })),
       };
     } catch (error) {
-      logger.error({ error, txid }, "Failed to fetch transaction");
+      logger.error({ error, txid }, "Failed to get transaction");
       throw new BitcoinError(
-        "Failed to fetch transaction",
+        "Failed to get transaction",
         BitcoinErrorCode.BLOCKCHAIN_ERROR,
       );
+    }
+  }
+
+  /**
+   * Helper function to extract Bitcoin address from output script
+   */
+  private tryGetAddress(script: Buffer): string | undefined {
+    try {
+      return bitcoin.address.fromOutputScript(script, this.network);
+    } catch {
+      return undefined;
     }
   }
 }

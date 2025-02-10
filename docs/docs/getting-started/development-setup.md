@@ -33,17 +33,89 @@ npm install
 npm run build
 ```
 
-## Development Workflow
+## Project Architecture
 
-### Running in Development Mode
+Bitcoin MCP Server uses a modular architecture based on the Model Context Protocol (MCP). The server is designed to support multiple transport mechanisms through a common base implementation.
 
-Start the server in development mode with auto-reloading:
+### Core Components
 
-```bash
-npm run dev
+```
+src/
+├── server/                 # Server implementations
+│   ├── base.ts            # Base server with common functionality
+│   ├── sse.ts             # Server-Sent Events implementation
+│   ├── stdio.ts           # Standard I/O implementation
+│   └── tools.ts           # Tool handlers (Bitcoin operations)
+├── services/              # Core business logic
+│   └── bitcoin.ts         # Bitcoin service implementation
+├── blockstream/           # Blockstream API types
+├── utils/                 # Utility functions
+└── types.ts              # Type definitions
 ```
 
-### Running Tests
+### Server Architecture
+
+```
+┌─────────────────────────┐
+│     BaseBitcoinServer   │
+├─────────────────────────┤
+│ ✓ Tool Registration     │
+│ ✓ Error Handling        │
+│ ✓ Lifecycle Management  │
+└───────────┬─────────────┘
+            │
+    ┌───────┴───────┐
+    │               │
+┌───────────┐ ┌──────────┐
+│   SSE     │ │  STDIO   │
+└───────────┘ └──────────┘
+```
+
+#### Base Server (`server/base.ts`)
+The foundation of our server architecture, providing:
+- Tool registration and handling
+- Error management
+- Common lifecycle methods
+- Type-safe request/response handling
+
+#### SSE Server (`server/sse.ts`)
+Implements Server-Sent Events transport:
+- Real-time updates
+- Persistent connections
+- Express.js endpoints
+- Automatic reconnection
+
+#### STDIO Server (`server/stdio.ts`)
+Implements Standard I/O transport:
+- Command-line interface
+- Stream redirection
+- Process isolation
+- Clean logging separation
+
+### Core Services
+
+#### Bitcoin Service (`services/bitcoin.ts`)
+Handles all Bitcoin-related operations:
+- Key generation
+- Address validation
+- Transaction decoding
+- Blockchain queries
+
+## Development Workflow
+
+### Running Different Server Modes
+
+1. **STDIO Mode (Default)**
+```bash
+npm start
+```
+
+2. **SSE Mode**
+```bash
+SERVER_MODE=sse npm start
+```
+
+### Testing
 
 Execute the test suite:
 
@@ -65,23 +137,6 @@ Fix automatic linting issues:
 npm run lint:fix
 ```
 
-## Project Structure
-
-### Key Directories and Files
-
-```
-bitcoin-mcp/
-├── src/                      # Source code
-│   ├── bitcoin-client.ts     # Bitcoin operations
-│   ├── sse_server.ts        # SSE transport implementation
-│   ├── stdio_server.ts      # STDIO transport implementation
-│   ├── index.ts            # Main entry point
-│   └── utils/              # Utility functions
-├── tests/                   # Test files
-├── docs/                    # Documentation
-└── examples/                # Example usage
-```
-
 ## Development Guidelines
 
 ### Code Style
@@ -90,13 +145,28 @@ bitcoin-mcp/
 - Follow the existing code style
 - Add type definitions for all functions and variables
 - Keep functions small and focused
+- Document with JSDoc comments
+
+### Adding New Features
+
+1. **New Tool Implementation**
+   - Add tool handler in `server/tools.ts`
+   - Register tool in `server/base.ts`
+   - Implement business logic in `services/bitcoin.ts`
+   - Add necessary types in `types.ts`
+
+2. **New Transport Implementation**
+   - Create new class extending `BaseBitcoinServer`
+   - Implement `start()` method
+   - Handle transport-specific setup
+   - Add appropriate error handling
 
 ### Testing
 
 - Write tests for all new features
-- Maintain existing test coverage
-- Use meaningful test descriptions
 - Test both success and error cases
+- Mock external services appropriately
+- Maintain high test coverage
 
 ### Documentation
 
@@ -104,27 +174,6 @@ bitcoin-mcp/
 - Include JSDoc comments for public APIs
 - Keep the README up to date
 - Document breaking changes
-
-### Git Workflow
-
-1. Create a feature branch:
-
-```bash
-git checkout -b feature/your-feature-name
-```
-
-2. Make your changes and commit:
-
-```bash
-git add .
-git commit -m "feat: description of your changes"
-```
-
-3. Push your branch and create a pull request:
-
-```bash
-git push origin feature/your-feature-name
-```
 
 ## Debugging
 
@@ -161,3 +210,7 @@ LOG_LEVEL=debug npm start
 ```
 
 2. Start debugging using F5 or the VS Code debug panel
+
+## Contributing
+
+Please see our [Contributing Guide](../contributing.md) for details on how to contribute to the project.

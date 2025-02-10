@@ -1,4 +1,12 @@
-// Type definitions
+/**
+ * 📦 Bitcoin Types
+ * =================
+ *
+ * This module defines the core types used throughout the Bitcoin MCP server.
+ * It includes types for configuration, key generation, transaction decoding,
+ * block information, and error handling.
+ *
+ */
 
 import { z } from "zod";
 

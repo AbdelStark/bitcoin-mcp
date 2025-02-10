@@ -1,9 +1,9 @@
-export * from "./bitcoin_mcp_types.js";
+export * from "./types.js";
 
 import { config } from "dotenv";
-import { BitcoinSseServer } from "./sse_server.js";
-import { BitcoinStdioServer } from "./stdio_server.js";
-import { Config, ServerConfig, ServerMode } from "./bitcoin_mcp_types.js";
+import { BitcoinSseServer } from "./server/sse.js";
+import { BitcoinStdioServer } from "./server/stdio.js";
+import { Config, ServerConfig, ServerMode } from "./types.js";
 import logger from "./utils/logger.js";
 
 // Load environment variables
