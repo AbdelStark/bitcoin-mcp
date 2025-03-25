@@ -6,7 +6,7 @@
 
 </div>
 
-# ₿itcoin MCP Server
+# ₿itcoin & Lightning Network MCP Server
 
 <div align="center">
   <h3>
@@ -31,7 +31,7 @@
 
 ## Overview
 
-A Model Context Protocol (MCP) server that enables AI models to interact with Bitcoin, allowing them to generate keys, validate addresses, decode transactions, query the blockchain, and more.
+A Model Context Protocol (MCP) server that enables AI models to interact with Bitcoin and Lightning Network, allowing them to generate keys, validate addresses, decode transactions, query the blockchain, and more.
 
 <a href="https://glama.ai/mcp/servers/y42jsc8cig"><img width="380" height="200" src="https://glama.ai/mcp/servers/y42jsc8cig/badge" alt="Bitcoin Server MCP server" /></a>
 
@@ -43,7 +43,7 @@ A Model Context Protocol (MCP) server that enables AI models to interact with Bi
 
 ## 💼 Table of Contents
 
-- [₿itcoin MCP Server](#itcoin-mcp-server)
+- [₿itcoin \& Lightning Network MCP Server](#itcoin--lightning-network-mcp-server)
   - [Overview](#overview)
   - [🎮 Demo](#-demo)
   - [💼 Table of Contents](#-table-of-contents)
@@ -54,6 +54,7 @@ A Model Context Protocol (MCP) server that enables AI models to interact with Bi
     - [Using STDIO (Local Extension)](#using-stdio-local-extension)
       - [Using SSE (Remote Extension)](#using-sse-remote-extension)
   - [📦 Development Setup](#-development-setup)
+    - [Lightning Network Configuration (Optional)](#lightning-network-configuration-optional)
   - [📦 Available Tools](#-available-tools)
   - [🚨 Error Handling](#-error-handling)
   - [🤝 Contributing](#-contributing)
