@@ -35,6 +35,7 @@ import {
   DecodeTxSchema,
   GetTransactionSchema,
   ValidateAddressSchema,
+  PayInvoiceSchema,
 } from "../types.js";
 
 /**
@@ -71,13 +72,13 @@ export async function handleGenerateKey(bitcoinService: BitcoinService) {
  */
 export async function handleValidateAddress(
   bitcoinService: BitcoinService,
-  args: unknown,
+  args: unknown
 ) {
   const result = ValidateAddressSchema.safeParse(args);
   if (!result.success) {
     throw new McpError(
       ErrorCode.InvalidParams,
-      `Invalid parameters: ${result.error.message}`,
+      `Invalid parameters: ${result.error.message}`
     );
   }
 
@@ -105,13 +106,13 @@ export async function handleValidateAddress(
  */
 export async function handleDecodeTx(
   bitcoinService: BitcoinService,
-  args: unknown,
+  args: unknown
 ) {
   const result = DecodeTxSchema.safeParse(args);
   if (!result.success) {
     throw new McpError(
       ErrorCode.InvalidParams,
-      `Invalid parameters: ${result.error.message}`,
+      `Invalid parameters: ${result.error.message}`
     );
   }
 
@@ -161,13 +162,13 @@ export async function handleGetLatestBlock(bitcoinService: BitcoinService) {
  */
 export async function handleGetTransaction(
   bitcoinService: BitcoinService,
-  args: unknown,
+  args: unknown
 ) {
   const result = GetTransactionSchema.safeParse(args);
   if (!result.success) {
     throw new McpError(
       ErrorCode.InvalidParams,
-      `Invalid parameters: ${result.error.message}`,
+      `Invalid parameters: ${result.error.message}`
     );
   }
 
@@ -184,4 +185,86 @@ export async function handleGetTransaction(
       },
     ] as TextContent[],
   };
+}
+
+/**
+ * ⚡ Decode Lightning Invoice
+ * =======================
+ * Decodes a BOLT11 invoice and returns human-readable information
+ *
+ * @param bitcoinService - Bitcoin service instance
+ * @param args - Object containing the BOLT11 invoice to decode
+ * @throws {McpError} If invoice is invalid or LNBits is not configured
+ */
+export async function handleDecodeInvoice(
+  bitcoinService: BitcoinService,
+  args: unknown
+) {
+  if (
+    !args ||
+    typeof args !== "object" ||
+    !("invoice" in args) ||
+    typeof args.invoice !== "string"
+  ) {
+    throw new McpError(
+      ErrorCode.InvalidParams,
+      "Invalid parameters: invoice is required"
+    );
+  }
+
+  try {
+    const invoice = bitcoinService.decodeInvoice(args.invoice);
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Decoded Lightning invoice:\nNetwork: ${invoice.network}\nAmount: ${invoice.amount} satoshis\nDescription: ${invoice.description}\nExpiry: ${invoice.expiryDate}\nStatus: ${invoice.status}`,
+        },
+      ] as TextContent[],
+    };
+  } catch (error: any) {
+    throw new McpError(
+      ErrorCode.InternalError,
+      error.message || "Failed to decode invoice"
+    );
+  }
+}
+
+/**
+ * ⚡ Pay Lightning Invoice
+ * ===================
+ * Pays a BOLT11 invoice using configured LNBits wallet
+ *
+ * @param bitcoinService - Bitcoin service instance
+ * @param args - Object containing the BOLT11 invoice to pay
+ * @throws {McpError} If payment fails or LNBits is not configured
+ */
+export async function handlePayInvoice(
+  bitcoinService: BitcoinService,
+  args: unknown
+) {
+  const result = PayInvoiceSchema.safeParse(args);
+  if (!result.success) {
+    throw new McpError(
+      ErrorCode.InvalidParams,
+      `Invalid parameters: ${result.error.message}`
+    );
+  }
+
+  try {
+    const paymentHash = await bitcoinService.payInvoice(result.data.invoice);
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Payment successful!\nPayment hash: ${paymentHash}`,
+        },
+      ] as TextContent[],
+    };
+  } catch (error: any) {
+    throw new McpError(
+      ErrorCode.InternalError,
+      error.message || "Failed to pay invoice"
+    );
+  }
 }

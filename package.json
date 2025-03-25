@@ -1,6 +1,6 @@
 {
   "name": "bitcoin-mcp",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A Model Context Protocol server for interacting with Bitcoin.",
   "type": "module",
   "main": "./build/index.js",
@@ -61,7 +61,8 @@
     "tiny-secp256k1": "^2.2.3",
     "tsx": "^4.7.1",
     "typescript": "^5.4.2",
-    "zod": "^3.24.0"
+    "zod": "^3.24.0",
+    "bolt11-decoder": "^1.2.6"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

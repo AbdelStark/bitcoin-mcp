@@ -45,6 +45,8 @@ import {
   handleDecodeTx,
   handleGetLatestBlock,
   handleGetTransaction,
+  handleDecodeInvoice,
+  handlePayInvoice,
 } from "./tools.js";
 const SERVER_NAME = "bitcoin-mcp";
 const SERVER_VERSION = "0.0.1";
@@ -67,7 +69,7 @@ export abstract class BaseBitcoinServer implements BitcoinServer {
     this.bitcoinService = new BitcoinService(config);
     this.server = new Server(
       { name: SERVER_NAME, version: SERVER_VERSION },
-      { capabilities: { tools: {} } },
+      { capabilities: { tools: {} } }
     );
     this.setupHandlers();
   }
@@ -136,9 +138,9 @@ export abstract class BaseBitcoinServer implements BitcoinServer {
           inputSchema: {
             type: "object",
             properties: {
-              tx: { type: "string", description: "Transaction hex" },
+              rawHex: { type: "string", description: "Transaction hex" },
             },
-            required: ["tx"],
+            required: ["rawHex"],
           },
         } as Tool,
         {
@@ -155,6 +157,34 @@ export abstract class BaseBitcoinServer implements BitcoinServer {
               txid: { type: "string", description: "Transaction ID" },
             },
             required: ["txid"],
+          },
+        } as Tool,
+        {
+          name: "decode_invoice",
+          description: "Decode a Lightning invoice",
+          inputSchema: {
+            type: "object",
+            properties: {
+              invoice: {
+                type: "string",
+                description: "BOLT11 Lightning invoice",
+              },
+            },
+            required: ["invoice"],
+          },
+        } as Tool,
+        {
+          name: "pay_invoice",
+          description: "Pay a Lightning invoice",
+          inputSchema: {
+            type: "object",
+            properties: {
+              invoice: {
+                type: "string",
+                description: "BOLT11 Lightning invoice",
+              },
+            },
+            required: ["invoice"],
           },
         } as Tool,
       ],
@@ -182,13 +212,19 @@ export abstract class BaseBitcoinServer implements BitcoinServer {
             case "get_transaction": {
               return handleGetTransaction(this.bitcoinService, args);
             }
+            case "decode_invoice": {
+              return handleDecodeInvoice(this.bitcoinService, args);
+            }
+            case "pay_invoice": {
+              return handlePayInvoice(this.bitcoinService, args);
+            }
             default:
               throw new McpError(ErrorCode.MethodNotFound, "Tool not found");
           }
         } catch (error) {
           return this.handleError(error);
         }
-      },
+      }
     );
   }
 

@@ -67,6 +67,9 @@ A Model Context Protocol (MCP) server that enables AI models to interact with Bi
 - **Blockchain Queries**:
   - **Latest Block**: Retrieve details about the most recent block (hash, height, timestamp, transaction count, etc.).
   - **Transaction Details**: Fetch detailed information about a transaction using its TXID.
+- **Lightning Network**:
+  - **Invoice Decoding**: Parse a BOLT11 Lightning invoice and display human-readable information.
+  - **Payment**: Pay a Lightning invoice directly from your LNBits wallet.
 
 ## 🔑 Claude Desktop Integration
 
@@ -169,6 +172,23 @@ If Goose does not seem to use the extension (for instance, if it responds that i
 ## 📦 Development Setup
 
 Find the setup instructions in the [Development Setup](https://abdelstark.github.io/bitcoin-mcp/docs/getting-started/development-setup) guide.
+
+### Lightning Network Configuration (Optional)
+
+To use Lightning Network features, you'll need to configure LNBits connection details. These are optional and only required if you plan to use the Lightning Network tools.
+
+```json
+{
+  "lnbitsUrl": "https://demo.lnbits.com",  
+  "lnbitsAdminKey": "your_admin_key",      // Required for making payments
+  "lnbitsReadKey": "your_read_key"         // Required for wallet information
+}
+```
+
+You can obtain these values by:
+1. Creating an account at [LNBits](https://lnbits.com/)
+2. Creating a new wallet
+3. Going to API info to find your API keys
 
 ## 📦 Available Tools
 

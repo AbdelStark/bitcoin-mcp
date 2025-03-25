@@ -23,9 +23,16 @@ export async function main() {
       ? "https://blockstream.info/api"
       : "https://blockstream.info/testnet/api");
 
+  const lnbitsUrl = process.env.LNBITS_URL;
+  const lnbitsAdminKey = process.env.LNBITS_ADMIN_KEY;
+  const lnbitsReadKey = process.env.LNBITS_READ_KEY;
+
   const config: Config = {
     network,
     blockstreamApiBase,
+    lnbitsUrl,
+    lnbitsAdminKey,
+    lnbitsReadKey,
   };
 
   const mode =

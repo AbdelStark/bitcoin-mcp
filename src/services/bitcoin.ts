@@ -26,7 +26,11 @@ import {
   TransactionInfo,
   BitcoinError,
   BitcoinErrorCode,
+  HumanFriendlyInvoice,
+  LightningError,
+  LightningErrorCode,
 } from "../types.js";
+import { LNBitsClient } from "../clients/lnbits_clients.js";
 import logger from "../utils/logger.js";
 
 const ECPair: ECPairAPI = ECPairFactory(tinysecp);
@@ -35,6 +39,7 @@ const rng = (size: number) => randomBytes(size);
 export class BitcoinService {
   private network: bitcoin.networks.Network;
   private apiBase: string;
+  private lnbitsClient?: LNBitsClient;
 
   /**
    * Creates a new Bitcoin service instance
@@ -47,6 +52,18 @@ export class BitcoinService {
         ? bitcoin.networks.testnet
         : bitcoin.networks.bitcoin;
     this.apiBase = config.blockstreamApiBase;
+
+    // Initialize LNBits client only if all required config is present
+    if (config.lnbitsUrl && config.lnbitsAdminKey && config.lnbitsReadKey) {
+      this.lnbitsClient = new LNBitsClient(
+        config.lnbitsUrl,
+        config.lnbitsAdminKey,
+        config.lnbitsReadKey
+      );
+      logger.info("LNBits client initialized");
+    } else {
+      logger.info("LNBits client not initialized (missing configuration)");
+    }
   }
 
   /**
@@ -247,6 +264,62 @@ export class BitcoinService {
       return bitcoin.address.fromOutputScript(script, this.network);
     } catch {
       return undefined;
+    }
+  }
+
+  /**
+   * ⚡ Decode Lightning Invoice
+   * =======================
+   * Decodes a BOLT11 invoice and presents human-readable information
+   *
+   * @param bolt11 - BOLT11 format Lightning invoice
+   * @throws {LightningError} If decoding fails or LNBits is not configured
+   */
+  decodeInvoice(bolt11: string): HumanFriendlyInvoice {
+    if (!this.lnbitsClient) {
+      throw new LightningError(
+        "LNBits not configured. Please add lnbitsUrl, lnbitsAdminKey, and lnbitsReadKey to configuration.",
+        LightningErrorCode.NOT_CONNECTED
+      );
+    }
+
+    try {
+      return this.lnbitsClient.toHumanFriendlyInvoice(bolt11);
+    } catch (error) {
+      logger.error({ error, bolt11 }, "Failed to decode invoice");
+      throw new LightningError(
+        "Failed to decode Lightning invoice",
+        LightningErrorCode.PAYMENT_ERROR
+      );
+    }
+  }
+
+  /**
+   * ⚡ Pay Lightning Invoice
+   * ====================
+   * Pays a BOLT11 invoice using LNBits
+   *
+   * @param bolt11 - BOLT11 format Lightning invoice
+   * @returns Payment hash if successful
+   * @throws {LightningError} If payment fails or LNBits is not configured
+   */
+  async payInvoice(bolt11: string): Promise<string> {
+    if (!this.lnbitsClient) {
+      throw new LightningError(
+        "LNBits not configured. Please add lnbitsUrl, lnbitsAdminKey, and lnbitsReadKey to configuration.",
+        LightningErrorCode.NOT_CONNECTED
+      );
+    }
+
+    try {
+      const response = await this.lnbitsClient.sendPayment(bolt11);
+      return response.payment_hash;
+    } catch (error) {
+      logger.error({ error, bolt11 }, "Failed to pay invoice");
+      throw new LightningError(
+        "Failed to pay Lightning invoice",
+        LightningErrorCode.PAYMENT_ERROR
+      );
     }
   }
 }

@@ -13,6 +13,9 @@ import { z } from "zod";
 export const ConfigSchema = z.object({
   network: z.enum(["mainnet", "testnet"]).default("mainnet"),
   blockstreamApiBase: z.string().url().default("https://blockstream.info/api"),
+  lnbitsUrl: z.string().url().optional(),
+  lnbitsAdminKey: z.string().optional(),
+  lnbitsReadKey: z.string().optional(),
 });
 
 export type Config = z.infer<typeof ConfigSchema>;
@@ -89,7 +92,7 @@ export class BitcoinError extends Error {
   constructor(
     message: string,
     public readonly code: BitcoinErrorCode,
-    public readonly status = 500,
+    public readonly status = 500
   ) {
     super(message);
     this.name = "BitcoinError";
@@ -123,3 +126,77 @@ export const DecodeTxSchema = z.object({
 export const GetTransactionSchema = z.object({
   txid: z.string().length(64, "Invalid transaction ID"),
 });
+
+export const PayInvoiceSchema = z.object({
+  invoice: z.string().min(1, "Invoice cannot be empty"),
+});
+
+export type PayInvoiceArgs = z.infer<typeof PayInvoiceSchema>;
+
+export interface PaidInvoice {
+  invoice: string;
+}
+
+/**
+ * Error codes for Nostr operations
+ */
+export enum LightningErrorCode {
+  CONNECTION_ERROR = "connection_error",
+  PAYMENT_ERROR = "payment_error",
+  NOT_CONNECTED = "not_connected",
+  DISCONNECT_ERROR = "disconnect_error",
+}
+
+export class LightningError extends Error {
+  constructor(
+    message: string,
+    public readonly code: LightningErrorCode | string,
+    public readonly status?: number
+  ) {
+    super(message);
+    this.name = "NostrError";
+  }
+}
+
+export interface WalletInfo {
+  id: string;
+  name: string;
+  balance: number;
+}
+
+export interface PaymentResponse {
+  payment_hash: string;
+}
+
+export interface Tag {
+  tagName: string;
+  data: string | number | boolean | unknown;
+}
+
+export interface DecodedInvoice {
+  paymentRequest: string;
+  prefix: string;
+  wordsTemp: string;
+  complete: boolean;
+  millisatoshis: string;
+  satoshis: number;
+  timestamp: number;
+  timestampString: string;
+  timeExpireDate: number;
+  timeExpireDateString: string;
+  tags: Tag[];
+  merchantName?: string;
+  description?: string;
+}
+
+export interface HumanFriendlyInvoice {
+  network: string;
+  amount: number;
+  description: string;
+  expiryDate: string;
+  status: string;
+}
+
+export interface ProviderError extends Error {
+  data?: unknown;
+}
