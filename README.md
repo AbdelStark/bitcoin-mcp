@@ -35,6 +35,10 @@ A Model Context Protocol (MCP) server that enables AI models to interact with Bi
 
 <a href="https://glama.ai/mcp/servers/y42jsc8cig"><img width="380" height="200" src="https://glama.ai/mcp/servers/y42jsc8cig/badge" alt="Bitcoin Server MCP server" /></a>
 
+<a href="https://glama.ai/mcp/servers/@AbdelStark/bitcoin-mcp">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@AbdelStark/bitcoin-mcp/badge" alt="Bitcoin Server MCP server" />
+</a>
+
 ## 🎮 Demo
 
 | Claude Demo [Video](https://github.com/user-attachments/assets/ce7a2665-c276-4a54-a727-b29dd911f8af)         | Goose Demo [Video](https://github.com/user-attachments/assets/7c1e4a05-51cf-435f-bd34-39e8fba6635e) |
