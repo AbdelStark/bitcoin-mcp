@@ -19,7 +19,7 @@
  *      │<─────────────│
  *
  * Features:
- * 📥 MPC tools over STDIO
+ * 📥 MCP tools over STDIO
  * 🔄 Stream Redirection
  * 🛡️ Process Isolation
  * 📝 Clean Logging
