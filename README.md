@@ -33,8 +33,6 @@
 
 A Model Context Protocol (MCP) server that enables AI models to interact with Bitcoin and Lightning Network, allowing them to generate keys, validate addresses, decode transactions, query the blockchain, and more.
 
-<a href="https://glama.ai/mcp/servers/y42jsc8cig"><img width="380" height="200" src="https://glama.ai/mcp/servers/y42jsc8cig/badge" alt="Bitcoin Server MCP server" /></a>
-
 <a href="https://glama.ai/mcp/servers/@AbdelStark/bitcoin-mcp">
   <img width="380" height="200" src="https://glama.ai/mcp/servers/@AbdelStark/bitcoin-mcp/badge" alt="Bitcoin Server MCP server" />
 </a>
