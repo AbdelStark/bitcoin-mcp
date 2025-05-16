@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/abdelstark-bitcoin-mcp-badge.png)](https://mseep.ai/app/abdelstark-bitcoin-mcp)
+
 <div align="center">
 
 <a href="https://github.com/AbdelStark/bitcoin-mcp/actions/workflows/ci.yml"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/AbdelStark/bitcoin-mcp/ci.yml?style=for-the-badge" height=30></a>
