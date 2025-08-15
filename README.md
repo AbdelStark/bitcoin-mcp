@@ -11,22 +11,7 @@
 # ₿itcoin & Lightning Network MCP Server
 
 <div align="center">
-  <h3>
-    <a href="abdelstark.github.io/bitcoin-mcp/">
-      Documentation
-    </a>
-    <span> | </span>
-    <a href="https://abdelstark.github.io/bitcoin-mcp/docs/integration/claude-desktop">
-      Try with Claude
-    </a>
-    <span> | </span>
-    <a href="https://abdelstark.github.io/bitcoin-mcp/docs/integration/goose">
-      Try with Goose
-    </a>
-  </h3>
-</div>
-
-<div align="center">
+[![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/AbdelStark/bitcoin-mcp)](https://archestra.ai/mcp-catalog/AbdelStark__bitcoin-mcp)
 <a href="https://smithery.ai/server/@AbdelStark/bitcoin-mcp"><img alt="Smithery Badge" src="https://smithery.ai/badge/@AbdelStark/bitcoin-mcp"></a>
 <a href="https://www.npmjs.com/package/bitcoin-mcp"><img alt="NPM Version" src="https://img.shields.io/npm/v/bitcoin-mcp"></a>
 </div>
